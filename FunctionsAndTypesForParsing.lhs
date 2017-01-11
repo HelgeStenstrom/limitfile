@@ -8,11 +8,11 @@ full types in Parsec.
 
 > module FunctionsAndTypesForParsing where
 >
-> import Text.Parsec (ParseError)
+> import Text.Parsec (ParseError, oneOf)
 > import Text.Parsec.String (Parser)
-> import Text.Parsec.String.Parsec (parse)
-> import Text.Parsec.String.Char (oneOf)
-> import Text.Parsec.String.Combinator (eof,manyTill,anyToken)
+> import Text.Parsec.Prim (parse)
+> import Text.Parsec.Char ()
+> import Text.Parsec.Combinator (eof,manyTill,anyToken)
 > import Control.Applicative ((<$>), (<*>), (<*), (*>), many)
 > import Control.Monad (void)
 
