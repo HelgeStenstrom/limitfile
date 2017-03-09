@@ -1,6 +1,6 @@
 -- This file implements a few syntaxes found in CSV files.
 
-module OneTeSyntax ()
+module OneTeSyntax
 where
 
 
@@ -13,10 +13,10 @@ import Debug.Trace (trace)
 import Text.Parsec (parseTest, char, noneOf, oneOf, sepBy, many1, many, eof)
 import Text.Parsec.Char (anyChar, string, digit)
 import Text.Parsec.Combinator (manyTill)
-import Text.Parsec.Prim -- (ParsecT, getParserState, stateInput)
+import Text.Parsec.Prim (ParsecT, getParserState, stateInput, parse)
 import Text.Parsec.String (Parser)
-import Text.Parsec.Error -- .ParseError
-import Text.Parsec.Pos 
+-- import Text.Parsec.Error -- .ParseError
+-- import Text.Parsec.Pos 
 import qualified Test.HUnit as H
 
 import FunctionsAndTypesForParsing
