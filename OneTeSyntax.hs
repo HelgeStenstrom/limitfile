@@ -13,7 +13,7 @@ import Debug.Trace (trace)
 import Text.Parsec (parseTest, char, noneOf, oneOf, sepBy, many1, many, eof)
 import Text.Parsec.Char (anyChar, string, digit)
 import Text.Parsec.Combinator (manyTill)
-import Text.Parsec.Prim (ParsecT, getParserState, stateInput, parse)
+import Text.Parsec.Prim (ParsecT, getParserState, stateInput, parse, (<|>))
 import Text.Parsec.String (Parser)
 -- import Text.Parsec.Error -- .ParseError
 -- import Text.Parsec.Pos 
@@ -32,7 +32,9 @@ lexeme p = do
            return x
 
 pipeSepList :: Parser [String]
-pipeSepList  = sepBy (many1 $ noneOf "|")  (char '|')
+pipeSepList  = do
+             s <- sepBy (many1 $ noneOf "|")  (char '|')
+             return $ map trim s
 
 trim :: String -> String
 trim = (dropWhile (\c -> c== ' ')) . reverse .  (dropWhile (\c -> c== ' ')) . reverse
@@ -46,6 +48,29 @@ pipe = lexeme $ char '|'
 pipeSep1 ::  Parser [String]
 pipeSep1 = sepBy (many1 $ noneOf "|") pipe
 
+csvCell :: Parser String
+csvCell = do
+        whitespace
+        s <- many $ noneOf "; \n\r"
+        -- char ';' -- <|> char '\n'
+        whitespace
+        return s
+
+csvCells :: Parser [String]
+csvCells = do
+        first <- csvCell
+        next <- remainingCells
+        return (first:next)
+
+remainingCells :: Parser [String]
+remainingCells = do
+               (char ';' >> csvCells) <|> (return [] )
+
+csvLine :: Parser [String]
+csvLine = do
+        ss <- many  csvCell
+        return ss
+
 -- From https://www.evernote.com/shard/s4/nl/295093/64d0cfd5-39dd-4f38-a2c2-8dc3d7bc7561/
 -- https://www.reddit.com/r/haskelltil/comments/3el2d6/a_handy_function_for_debugging_in_parsec_by_what/
 println msg = trace (show msg) $ return ()
@@ -58,6 +83,14 @@ seeNext n = do
 
 betweenBraces = char '{' >> manyTill (seeNext 10 >> anyChar) (char '}')
 -- end of above article
+
+tableName :: Parser String
+tableName = do
+  whitespace
+  char '['
+  s <- many $ noneOf "]"
+  char ']'
+  return s
 
 demo = do
   parseTest pipeSepList "aaa | b|c|d|  e e e"
