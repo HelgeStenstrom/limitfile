@@ -54,6 +54,11 @@ carrierStandard = do
    <|> (char '*' >> pure Any)
 
 
+data CarrierBW = Bandwidths [Int] | AnyBW deriving (Show, Eq)
+
+carrierBW :: Parser CarrierBW
+carrierBW = do
+          (char '*' >> pure AnyBW) -- <|> ( >> pure 
 
 -- ======= Datatyper inom limitfiler ====
 -- ======= Syntax inom celler ==========

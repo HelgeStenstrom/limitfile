@@ -29,6 +29,7 @@ tokenTests = TestList [
    , utraMixedCase
    , eutraMixedCase
    , asteriskMeansAnyStandard
+   , carrierBandwidthMHzIsListOfInt
     ]
 
 topLevelTests = TestList [
@@ -72,6 +73,12 @@ asteriskMeansAnyStandard =
   parse carrierStandard "" "*"  ~?= Right Any
 
 -- =================
+carrierBandwidthMHzIsListOfInt = 
+  parse carrierBW "" "5|10|15|20"  ~?= Right (Bandwidths [5, 10, 15, 20])
+  
+carrierBandwidthMHzIsAnyBW = 
+  parse carrierBW "" "*"  ~?= Right AnyBW
+  
 -- =================
 
 parsingEmptyFileReturnsEmptyList =
