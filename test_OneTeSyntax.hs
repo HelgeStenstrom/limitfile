@@ -24,8 +24,11 @@ tableNameTests = TestList [
     ]
 
 tokenTests = TestList [
-     utraBecomesCarrierStandard
-   , eutraBecomesCarrierStandard
+     utraBecomesCarrierStandardSameCase
+   , eutraBecomesCarrierStandardSameCase
+   , utraMixedCase
+   , eutraMixedCase
+   , asteriskMeansAnyStandard
     ]
 
 topLevelTests = TestList [
@@ -55,10 +58,18 @@ tableNameWithinBracketsEvenWithBlanksBefore =
 
 -- =================
 
-utraBecomesCarrierStandard =
+utraBecomesCarrierStandardSameCase =
+   parse carrierStandard "" "UTRA"  ~?= Right Utra
+eutraBecomesCarrierStandardSameCase =
+   parse carrierStandard "" "EUTRA"  ~?= Right Eutra
+
+utraMixedCase =
    parse carrierStandard "" "UtRa"  ~?= Right Utra
-eutraBecomesCarrierStandard =
-   parse carrierStandard "" "eUtRa"  ~?= Right Eutra
+eutraMixedCase =
+   parse carrierStandard "" "EuTrA"  ~?= Right Eutra
+
+asteriskMeansAnyStandard =
+  parse carrierStandard "" "*"  ~?= Right Any
 
 -- =================
 -- =================

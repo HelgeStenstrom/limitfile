@@ -4,7 +4,7 @@ module OneTeSyntax
 where
 
 
--- import Data.Char (isSpace)
+import Data.Char (toLower, toUpper)
 -- import Data.Text (dropWhileEnd, dropWhile)
 -- import Text.Parsec.Token
 import Control.Monad (void)
@@ -13,7 +13,7 @@ import Debug.Trace (trace)
 import Text.Parsec (parseTest, char, noneOf, oneOf, sepBy, many1, many, eof)
 import Text.Parsec.Char (anyChar, string, digit)
 import Text.Parsec.Combinator (manyTill)
-import Text.Parsec.Prim (ParsecT, getParserState, stateInput, parse, (<|>))
+import Text.Parsec.Prim (ParsecT, getParserState, parse, stateInput, try, (<|>), (<?>) )
 import Text.Parsec.String (Parser)
 -- import Text.Parsec.Error -- .ParseError
 -- import Text.Parsec.Pos 
@@ -39,11 +39,20 @@ lexeme p = do
 
 -- ======= Datatyper inom limitfiler ====
 
-data CarrierStandard = Utra | Eutra deriving (Show, Eq)
+-- Match the lowercase or uppercase form of 'c'
+caseInsensitiveChar :: Char -> Parser Char
+caseInsensitiveChar c = char (toLower c) <|> char (toUpper c)
+
+-- Match the string 's', accepting either lowercase or uppercase form of each character 
+caseInsensitiveString s = try (mapM caseInsensitiveChar s) <?> "\"" ++ s ++ "\""
+
+data CarrierStandard = Utra | Eutra | Any deriving (Show, Eq)
 
 carrierStandard :: Parser CarrierStandard
 carrierStandard = do
-                return Utra
+   try (caseInsensitiveString "UTRA" >> pure Utra) <|> (caseInsensitiveString "EUTRA" >> pure Eutra)
+
+
 
 -- ======= Datatyper inom limitfiler ====
 -- ======= Syntax inom celler ==========
