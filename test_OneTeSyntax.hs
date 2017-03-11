@@ -14,13 +14,19 @@ tests = TestList [
    , tableNameWithinBrackets
    , tableNameWithinBracketsEvenWithBlanksBefore
    , tableNameTests
+   , tokenTests
    -- , topLevelTests
     ]
+    
 tableNameTests = TestList [
      tableNameWithinBrackets
    , tableNameWithinBracketsEvenWithBlanksBefore
     ]
 
+tokenTests = TestList [
+     utraBecomesCarrierStandard
+   , eutraBecomesCarrierStandard
+    ]
 
 topLevelTests = TestList [
     parsingEmptyFileReturnsEmptyList
@@ -45,6 +51,17 @@ tableNameWithinBrackets =
 
 tableNameWithinBracketsEvenWithBlanksBefore =
    parse tableName "" "  [my title]..." ~?= Right "my title"
+
+
+-- =================
+
+utraBecomesCarrierStandard =
+   parse carrierStandard "" "UtRa"  ~?= Right Utra
+eutraBecomesCarrierStandard =
+   parse carrierStandard "" "eUtRa"  ~?= Right Eutra
+
+-- =================
+-- =================
 
 parsingEmptyFileReturnsEmptyList =
    1 ~?= 2

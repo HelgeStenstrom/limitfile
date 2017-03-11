@@ -37,6 +37,15 @@ lexeme p = do
 
 
 
+-- ======= Datatyper inom limitfiler ====
+
+data CarrierStandard = Utra | Eutra deriving (Show, Eq)
+
+carrierStandard :: Parser CarrierStandard
+carrierStandard = do
+                return Utra
+
+-- ======= Datatyper inom limitfiler ====
 -- ======= Syntax inom celler ==========
 
 pipeSepList :: Parser [String]
