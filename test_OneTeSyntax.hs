@@ -14,8 +14,6 @@ tests = TestList [
    , tableNameWithinBrackets
    , tableNameWithinBracketsEvenWithBlanksBefore
    , tableNameTests
-   , csvCellTests
-   -- , csvLineTests
    -- , topLevelTests
     ]
 tableNameTests = TestList [
@@ -23,16 +21,6 @@ tableNameTests = TestList [
    , tableNameWithinBracketsEvenWithBlanksBefore
     ]
 
-csvCellTests =  TestList [
-    cellWithNoWhiteSpace
-  , cellWithWhiteSpace
-  , cellsEndedBySemiColon
-    ]
-
-csvLineTests =  TestList [
-    emptyLineReturnsEmptyList
-  -- , splitOnSemicolonUntilEOL
-    ]
 
 topLevelTests = TestList [
     parsingEmptyFileReturnsEmptyList
@@ -58,21 +46,7 @@ tableNameWithinBrackets =
 tableNameWithinBracketsEvenWithBlanksBefore =
    parse tableName "" "  [my title]..." ~?= Right "my title"
 
-cellWithNoWhiteSpace =
-   parse csvCell "" "cell;" ~?= Right "cell"
-
-cellWithWhiteSpace =
-   parse csvCell "cellWithWhiteSpace" "  cell ; " ~?= Right "cell"
-
-cellsEndedBySemiColon =
-   parse csvCells "cellsEndedBySemiColon" "  a ; b  ;" ~?= Right ["a", "b", ""]
-
-
-
-emptyLineReturnsEmptyList = 
-   parse csvLine "emptyLineReturnsEmptyList" "" ~?= Right [""]
-
-
 parsingEmptyFileReturnsEmptyList =
    1 ~?= 2
-   
+
+

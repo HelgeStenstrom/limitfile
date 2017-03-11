@@ -20,10 +20,11 @@ import Text.Parsec.String (Parser)
 import qualified Test.HUnit as H
 
 import FunctionsAndTypesForParsing
+import HelpFunctions
 
 
-whitespace :: Parser ()
-whitespace = void $ many $ oneOf " \n\t"
+trim :: String -> String
+trim = (dropWhile (\c -> c== ' ')) . reverse .  (dropWhile (\c -> c== ' ')) . reverse
 
 lexeme :: Parser a -> Parser a
 lexeme p = do
@@ -31,45 +32,30 @@ lexeme p = do
            whitespace
            return x
 
+-- blanks :: Parser ()
+-- blanks = void $ many $ char ' '
+
+
+
+-- ======= Syntax inom celler ==========
+
 pipeSepList :: Parser [String]
 pipeSepList  = do
              s <- sepBy (many1 $ noneOf "|")  (char '|')
              return $ map trim s
-
-trim :: String -> String
-trim = (dropWhile (\c -> c== ' ')) . reverse .  (dropWhile (\c -> c== ' ')) . reverse
-
-blanks :: Parser ()
-blanks = void $ many $ char ' '
-
 pipe :: Parser Char
 pipe = lexeme $ char '|'
 
 pipeSep1 ::  Parser [String]
 pipeSep1 = sepBy (many1 $ noneOf "|") pipe
 
-csvCell :: Parser String
-csvCell = do
-        whitespace
-        s <- many $ noneOf "; \n\r"
-        -- char ';' -- <|> char '\n'
-        whitespace
-        return s
+-- ======= Syntax inom celler ==========
 
-csvCells :: Parser [String]
-csvCells = do
-        first <- csvCell
-        next <- remainingCells
-        return (first:next)
+-- ======= celler till tabeller med namn ====
+-- ======= celler till tabeller med namn ====
+-- ======= Övrigt ======================
+-- ======= Övrigt ======================
 
-remainingCells :: Parser [String]
-remainingCells = do
-               (char ';' >> csvCells) <|> (return [] )
-
-csvLine :: Parser [String]
-csvLine = do
-        ss <- many  csvCell
-        return ss
 
 -- From https://www.evernote.com/shard/s4/nl/295093/64d0cfd5-39dd-4f38-a2c2-8dc3d7bc7561/
 -- https://www.reddit.com/r/haskelltil/comments/3el2d6/a_handy_function_for_debugging_in_parsec_by_what/
@@ -159,12 +145,10 @@ stringTests = mkTests string  stringExamples
 
 
 
-mkTests
-  :: (Show a, Eq a) => (a -> Parser a) -> [(String, a)] -> [H.Test]
+mkTests :: (Show a, Eq a) => (a -> Parser a) -> [(String, a)] -> [H.Test]
 mkTests p exs = map (\(src, exp) -> makeTest (p exp) (src, exp)) exs 
 
-mkTests2
-  :: (Show a, Eq a) => (a -> Parser a) -> [(String, a)] -> [H.Test]
+mkTests2 :: (Show a, Eq a) => (a -> Parser a) -> [(String, a)] -> [H.Test]
 mkTests2 p exs = map (\(src, exp) -> makeTest2 (p exp) (src, exp)) exs 
 
 makeTest :: (Eq a, Show a) => Parser a -> (String,a) -> H.Test
