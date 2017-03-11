@@ -51,6 +51,7 @@ data CarrierStandard = Utra | Eutra | Any deriving (Show, Eq)
 carrierStandard :: Parser CarrierStandard
 carrierStandard = do
    try (caseInsensitiveString "UTRA" >> pure Utra) <|> (caseInsensitiveString "EUTRA" >> pure Eutra)
+   <|> (char '*' >> pure Any)
 
 
 
