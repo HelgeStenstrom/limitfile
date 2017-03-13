@@ -9,6 +9,7 @@ main = do runTestTT tests
 tests = TestList [
      csvCellTests
    , csvLineTests
+   , namedCsvCellsTests
      ]
 
 
@@ -58,6 +59,8 @@ twoLinesText =
                                                                       [""],
                                                                       ["c", "d", "e"]]
 
+-- ======= celler med cellnamn =========
 
+namedCsvCellsTests = TestList []
 
 

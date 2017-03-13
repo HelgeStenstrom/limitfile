@@ -1,6 +1,6 @@
 -- This file implements Csv format. There are many that do. This is an attempt.
 
-module Csv
+module Csv (csvCell, csvCells, csvLine, csvLines)
 where
 
 import Text.Parsec.String (Parser)
@@ -36,3 +36,7 @@ csvLines :: Parser [[String]]
 csvLines = do
          (many csvLine <* eof)
 -- ======= CSV-fil till celler =========
+
+
+-- ======= celler med cellnamn =========
+-- ======= celler med cellnamn =========
