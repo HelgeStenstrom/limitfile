@@ -1,9 +1,7 @@
 .hpc
 test_Excel
-
 *.tic
 *.tix
 *.hi
 *.o
 *.html
-
