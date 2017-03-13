@@ -1,0 +1,58 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+span.lineno { color: white; background: #aaaaaa; border-right: solid white 12px }
+span.nottickedoff { background: yellow}
+span.istickedoff { background: white }
+span.tickonlyfalse { margin: -1px; border: 1px solid #f20913; background: #f20913 }
+span.tickonlytrue  { margin: -1px; border: 1px solid #60de51; background: #60de51 }
+span.funcount { font-size: small; color: orange; z-index: 2; position: absolute; right: 20 }
+span.decl { font-weight: bold }
+span.spaces    { background: white }
+</style>
+</head>
+<body>
+<pre>
+<span class="lineno">    1 </span>module Excel (excelColumns, excelColumn) where
+<span class="lineno">    2 </span>
+<span class="lineno">    3 </span>excelColumns :: [String]
+<span class="lineno">    4 </span><span class="decl"><span class="nottickedoff">excelColumns = map eColumn [0..]</span></span>
+<span class="lineno">    5 </span>
+<span class="lineno">    6 </span>eColumn :: Int -&gt; String
+<span class="lineno">    7 </span><span class="decl"><span class="nottickedoff">eColumn col | (0 &lt;= col) &amp;&amp; (col &lt; 26) = lowEColumn col</span>
+<span class="lineno">    8 </span><span class="spaces">            </span><span class="nottickedoff">| (col &gt;= 26) = (eColumn $ (div col  26 ) -1 ) ++ eColumn  ( mod col  26) </span>
+<span class="lineno">    9 </span><span class="spaces">            </span><span class="nottickedoff">| otherwise = &quot;unknown&quot;</span></span>
+<span class="lineno">   10 </span>
+<span class="lineno">   11 </span><span class="decl"><span class="nottickedoff">lowEColumns = map (\c -&gt; [c])  ['A'..'Z']</span></span>
+<span class="lineno">   12 </span>
+<span class="lineno">   13 </span>lowEColumn :: Int -&gt; String
+<span class="lineno">   14 </span><span class="decl"><span class="nottickedoff">lowEColumn n = lowEColumns !! n</span></span>
+<span class="lineno">   15 </span>
+<span class="lineno">   16 </span>excelColumn :: Int -&gt; String
+<span class="lineno">   17 </span><span class="decl"><span class="istickedoff">excelColumn n | <span class="tickonlyfalse">(n&lt;0)</span> = <span class="nottickedoff">&quot;unknown&quot;</span></span>
+<span class="lineno">   18 </span><span class="spaces">              </span><span class="istickedoff">| <span class="tickonlytrue">otherwise</span> =       (!!) (sequence =&lt;&lt; (tail $ iterate ( ['A'..'Z']:) [] ) ) n</span></span>
+<span class="lineno">   19 </span>-- excelColumn = (!!) (sequence =&lt;&lt; (tail $ iterate ( ['A'..'Z']:) [] ) )
+<span class="lineno">   20 </span>
+<span class="lineno">   21 </span><span class="decl"><span class="nottickedoff">p1 n = eColumn n == excelColumn n</span></span>
+<span class="lineno">   22 </span>
+<span class="lineno">   23 </span>
+<span class="lineno">   24 </span>excel2Number :: String -&gt; Int
+<span class="lineno">   25 </span><span class="decl"><span class="nottickedoff">excel2Number = flip foldl 0 $ \accum ch -&gt; accum * 26 + fromEnum ch - fromEnum 'A' + 1</span></span>
+<span class="lineno">   26 </span>
+<span class="lineno">   27 </span>-- misslyckas för n &lt; 0
+<span class="lineno">   28 </span><span class="decl"><span class="nottickedoff">p2 n = n == ( (-1) + (excel2Number $ eColumn n))</span></span>
+<span class="lineno">   29 </span>
+<span class="lineno">   30 </span>type APair = (Int, Int)
+<span class="lineno">   31 </span>type ExcelColumn = String
+<span class="lineno">   32 </span>type ExcelRow = Int
+<span class="lineno">   33 </span>
+<span class="lineno">   34 </span>newtype NumberedCell a  = NumberedCell ((ExcelColumn, ExcelRow), a)
+<span class="lineno">   35 </span>
+<span class="lineno">   36 </span>type StringCell = NumberedCell String
+<span class="lineno">   37 </span>type IntCell = NumberedCell Int
+<span class="lineno">   38 </span>
+
+</pre>
+</body>
+</html>

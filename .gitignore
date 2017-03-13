@@ -1,0 +1,5 @@
+.hpc
+*.tic
+*.tix
+*.hi
+*.o
