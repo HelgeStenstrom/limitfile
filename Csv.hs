@@ -4,7 +4,7 @@ module Csv
 where
 
 import Text.Parsec.String (Parser)
-import Text.Parsec ((<|>), char, many, noneOf)
+import Text.Parsec ((<|>), char, many, noneOf, eof)
 import HelpFunctions
 
 -- ======= CSV-fil till celler =========
@@ -32,4 +32,7 @@ csvLine = do
         char '\n'
         return ss
 
+csvLines :: Parser [[String]]
+csvLines = do
+         (many csvLine <* eof)
 -- ======= CSV-fil till celler =========

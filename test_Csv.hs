@@ -16,11 +16,15 @@ csvCellTests =  TestList [
     cellWithNoWhiteSpace
   , cellWithWhiteSpace
   , cellsEndedBySemiColon
+  , oneCellNotEndedBySemiColon
+  , twoCellsNotEndedBySemiColon
     ]
 
 csvLineTests =  TestList [
     emptyLineReturnsEmptyList
-  -- , splitOnSemicolonUntilEOL
+  , oneLineseEmpty
+  , twoLines
+  , twoLinesText
     ]
 
 cellWithNoWhiteSpace =
@@ -32,10 +36,28 @@ cellWithWhiteSpace =
 cellsEndedBySemiColon =
    parse csvCells "cellsEndedBySemiColon" "  a ; b  ;" ~?= Right ["a", "b", ""]
 
+oneCellNotEndedBySemiColon =
+   parse csvCells "oneCellNotEndedBySemiColon" "  a   " ~?= Right ["a"]
+
+twoCellsNotEndedBySemiColon =
+   parse csvCells "twoCellsNotEndedBySemiColon" "  a ; b  " ~?= Right ["a", "b"]
+
 
 
 emptyLineReturnsEmptyList = 
-   parse csvLine "emptyLineReturnsEmptyList" "" ~?= Right [""]
+   parse csvLine "emptyLineReturnsEmptyList" "\n" ~?= Right [""]
+
+oneLineseEmpty = 
+   parse csvLines "twoLines" "\n" ~?= Right [[""]]
+
+twoLines =
+   parse csvLines "twoLines" "\n\n" ~?= Right [[""],[""]]
+
+twoLinesText =
+   parse csvLines "twoLines" "a; b  \n\n  c  ; d    ;e \n" ~?= Right [["a", "b"],
+                                                                      [""],
+                                                                      ["c", "d", "e"]]
+
 
 
 

@@ -8,6 +8,6 @@ import Text.Parsec (char, many, oneOf)
 
 -- ======= Hjälpfunktioner =============
 whitespace :: Parser ()
-whitespace = void $ many $ oneOf " \n\t"
+whitespace = void $ many $ oneOf " \t"
 
 -- ======= Hjälpfunktioner =============
