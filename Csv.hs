@@ -6,13 +6,18 @@ where
 import Text.Parsec.String (Parser)
 import Text.Parsec ((<|>), char, many, noneOf, eof)
 import HelpFunctions
+import Control.Monad
+
+import Excel
 
 -- ======= CSV-fil till celler =========
+eol :: Parser Char
+eol = char '\n'
+
 csvCell :: Parser String
 csvCell = do
         whitespace
         s <- many $ noneOf "; \n\r"
-        -- char ';' -- <|> char '\n'
         whitespace
         return s
 
@@ -28,9 +33,8 @@ remainingCells = do
 
 csvLine :: Parser [String]
 csvLine = do
-        ss <- csvCells
-        char '\n'
-        return ss
+        csvCells <* eol
+
 
 csvLines :: Parser [[String]]
 csvLines = do

@@ -3,6 +3,7 @@ where
 import Test.HUnit
 import OneTeSyntax
 import Text.Parsec (parse)
+import Text.Parsec.Error
 
 main = do runTestTT tests
 
@@ -30,6 +31,7 @@ tokenTests = TestList [
    , eutraMixedCase
    , asteriskMeansAnyStandard
    , carrierBandwidthMHzIsListOfInt
+   , carrierBandwidthMHzIsAnyBW
     ]
 
 topLevelTests = TestList [
@@ -70,18 +72,33 @@ eutraMixedCase =
    parse carrierStandard "" "EuTrA"  ~?= Right Eutra
 
 asteriskMeansAnyStandard =
-  parse carrierStandard "" "*"  ~?= Right Any
+  parse carrierStandard "asteriskMeansAnyStandard" "*"  ~?= Right Any
 
 -- =================
 carrierBandwidthMHzIsListOfInt = 
-  parse carrierBW "" "5|10|15|20"  ~?= Right (Bandwidths [5, 10, 15, 20])
+  parse carrierBW "carrierBandwidthMHzIsListOfInt" "5|10|15|20"  ~?= Right (Bandwidths [5, 10, 15, 20])
   
 carrierBandwidthMHzIsAnyBW = 
-  parse carrierBW "" "*"  ~?= Right AnyBW
+  parse carrierBW "carrierBandwidthMHzIsAnyBW" "*"  ~?= Right AnyBW
   
 -- =================
 
 parsingEmptyFileReturnsEmptyList =
    1 ~?= 2
 
+
+
+
+
+
+
+
+
+
+
+
+-- -- ============ Helpers
+-- isParseError :: (Either ParseError Char) -> Bool
+-- isParseError ParseError = True
+-- isParseError _ = False
 

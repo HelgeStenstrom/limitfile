@@ -23,13 +23,15 @@ csvCellTests =  TestList [
 
 csvLineTests =  TestList [
     emptyLineReturnsEmptyList
+  -- , oneLineNoEOL
   , oneLineseEmpty
   , twoLines
   , twoLinesText
+  -- , twoLinesTextNoEOL  -- It's OK to require EOL at end of file.
     ]
 
 cellWithNoWhiteSpace =
-   parse csvCell "" "cell;" ~?= Right "cell"
+   parse csvCell "cellWithNoWhiteSpace" "cell;" ~?= Right "cell"
 
 cellWithWhiteSpace =
    parse csvCell "cellWithWhiteSpace" "  cell ; " ~?= Right "cell"
@@ -48,19 +50,34 @@ twoCellsNotEndedBySemiColon =
 emptyLineReturnsEmptyList = 
    parse csvLine "emptyLineReturnsEmptyList" "\n" ~?= Right [""]
 
+oneLineNoEOL =
+   parse csvLine "oneLineNoEOL" "a;b;c" ~?= Right ["a", "b", "c"]
+
+
 oneLineseEmpty = 
-   parse csvLines "twoLines" "\n" ~?= Right [[""]]
+   parse csvLines "oneLineseEmpty" "\n" ~?= Right [[""]]
 
 twoLines =
    parse csvLines "twoLines" "\n\n" ~?= Right [[""],[""]]
 
 twoLinesText =
-   parse csvLines "twoLines" "a; b  \n\n  c  ; d    ;e \n" ~?= Right [["a", "b"],
+   parse csvLines "twoLinesText" "a; b  \n\n  c  ; d    ;e \n" ~?= Right [["a", "b"],
+                                                                      [""],
+                                                                      ["c", "d", "e"]]
+
+twoLinesTextNoEOL =
+   parse csvLines "twoLinesTextNoEOL" "a; b  \n\n  c  ; d    ;e " ~?= Right [["a", "b"],
                                                                       [""],
                                                                       ["c", "d", "e"]]
 
 -- ======= celler med cellnamn =========
 
-namedCsvCellsTests = TestList []
+namedCsvCellsTests = TestList [
+        csvLineWithColumnNames
+        ]
 
+
+csvLineWithColumnNames =
+  1 ~?= 1
+  -- parse csvLineNamedColumn "csvLineWithColumnNames"  "a;b;c;d"  ~?= Right 1
 

@@ -10,7 +10,7 @@ import Data.Char (toLower, toUpper)
 import Control.Monad (void)
 import Data.Functor.Identity (Identity)
 import Debug.Trace (trace)
-import Text.Parsec (parseTest, char, noneOf, oneOf, sepBy, many1, many, eof)
+import Text.Parsec (parseTest, char, noneOf, oneOf, sepBy, sepBy1, many1, many, eof)
 import Text.Parsec.Char (anyChar, string, digit)
 import Text.Parsec.Combinator (manyTill)
 import Text.Parsec.Prim (ParsecT, getParserState, parse, stateInput, try, (<|>), (<?>) )
@@ -54,19 +54,47 @@ carrierStandard = do
    <|> (char '*' >> pure Any)
 
 
-data CarrierBW = Bandwidths [Int] | AnyBW deriving (Show, Eq)
+data CarrierBW = Bandwidths [Int] | AnyBW deriving (Show, Eq, Read)
 
 carrierBW :: Parser CarrierBW
-carrierBW = do
-          (char '*' >> pure AnyBW) -- <|> ( >> pure 
+-- carrierBW = do
+--           (char '*' >> pure AnyBW) -- <|> ( >> pure 
+carrierBW = cBW1
+
+cBW1 :: Parser CarrierBW
+cBW1 = do
+  bws <- pipeSepList
+  return $ Bandwidths (map read bws)
+  
+cBW11 :: Parser CarrierBW
+cBW11 = do
+      ns <- pipeSepNumList
+      return $ Bandwidths ns
+
+
+cBWb :: Parser CarrierBW
+cBWb = do
+     cb <- cBW2  <|> ( cBW11) 
+     return cb
+
+cBW2 :: Parser CarrierBW
+cBW2 = do
+     try (char '*' >> pure AnyBW ) <|> (char 'x' >> pure AnyBW )
+
 
 -- ======= Datatyper inom limitfiler ====
 -- ======= Syntax inom celler ==========
 
 pipeSepList :: Parser [String]
 pipeSepList  = do
-             s <- sepBy (many1 $ noneOf "|")  (char '|')
+             s <- sepBy1 (many1 $ noneOf "|")  (char '|')
              return $ map trim s
+
+pipeSepNumList :: Parser [Int]
+pipeSepNumList = do
+               ns <- pipeSepList
+               return $ map read ns
+
 pipe :: Parser Char
 pipe = lexeme $ char '|'
 

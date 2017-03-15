@@ -1,0 +1,8 @@
+Gör så här:
+
+ghc -fhpc test_Csv.hs --make
+rm *.tix
+./test_Csv
+hpc report test_Csv --exclude=Main
+hpc markup test_Csv --exclude=Main
+

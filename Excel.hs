@@ -17,7 +17,7 @@ type APair = (Int, Int)
 type ExcelColumn = String
 type ExcelRow = Int
 
-newtype NumberedCell a  = NumberedCell ((ExcelColumn, ExcelRow), a)
+newtype NumberedCell a  = NumberedCell (ExcelColumn, ExcelRow) a
 
 type StringCell = NumberedCell String
 type IntCell = NumberedCell Int
