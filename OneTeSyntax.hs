@@ -112,16 +112,19 @@ pipeSepIntItem :: Parser String
 pipeSepIntItem = do
    whitespace
    n <- many1 digit
-   void $ many $ oneOf " |"
+   void $ many $ char ' '
+   void (char '|') <|> eof
    return n
 
 pipeSepFloatItem :: Parser String
 pipeSepFloatItem = do
    whitespace
    n <- many1 (digit <|> char '.')
+   void $ many $ char ' '
    -- fel; godkänner även 3...1415
-   void $ many $ oneOf " |"
+   void (char '|') <|> eof
    return n
+
 
 -- ======= Syntax inom celler ==========
 

@@ -80,10 +80,10 @@ pipeSepIntItemTestWithSingleNumber =
     parseWithLeftOver pipeSepIntItem   " 123   " ~?= Right ("123", "")
 
 pipeSepIntItemTestWithPipe = 
-    parseWithLeftOver pipeSepIntItem   " 123  | 34 " ~?= Right ("123", "34 ")
+    parseWithLeftOver pipeSepIntItem   " 123  | 34 " ~?= Right ("123", " 34 ")
 
 pipeSepFloatItemTestWithSingleNumber =
-    parseWithLeftOver pipeSepFloatItem   " 1.23  | 34 " ~?= Right ("1.23", "34 ")
+    parseWithLeftOver pipeSepFloatItem   " 1.23  | 34 " ~?= Right ("1.23", " 34 ")
 
 
 --------------------------------------------------------------------
