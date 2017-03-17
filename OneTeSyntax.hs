@@ -57,9 +57,10 @@ carrierStandard = do
 data CarrierBW = Bandwidths [Int] | AnyBW deriving (Show, Eq, Read)
 
 carrierBW :: Parser CarrierBW
--- carrierBW = do
---           (char '*' >> pure AnyBW) -- <|> ( >> pure 
-carrierBW = cBW1
+carrierBW = cBWb
+  -- do
+  -- bws <- pipeSepList
+  -- return $ Bandwidths (map read bws)
 
 cBW1 :: Parser CarrierBW
 cBW1 = do
@@ -74,12 +75,15 @@ cBW11 = do
 
 cBWb :: Parser CarrierBW
 cBWb = do
-     cb <- cBW2  <|> ( cBW11) 
+     cb <- try (cBW2)  <|> ( cBW11) 
      return cb
 
 cBW2 :: Parser CarrierBW
 cBW2 = do
-     try (char '*' >> pure AnyBW ) <|> (char 'x' >> pure AnyBW )
+     whitespace
+     cbw <- try (char '*' >> pure AnyBW ) <|> (char 'x' >> pure AnyBW )
+     -- eof
+     return cbw
 
 
 -- ======= Datatyper inom limitfiler ====
@@ -87,12 +91,15 @@ cBW2 = do
 
 pipeSepList :: Parser [String]
 pipeSepList  = do
+             whitespace
              s <- sepBy1 (many1 $ noneOf "|")  (char '|')
              return $ map trim s
 
+
+
 pipeSepNumList :: Parser [Int]
 pipeSepNumList = do
-               ns <- pipeSepList
+               ns <- many1 pipeSepIntItem
                return $ map read ns
 
 pipe :: Parser Char
@@ -100,6 +107,21 @@ pipe = lexeme $ char '|'
 
 pipeSep1 ::  Parser [String]
 pipeSep1 = sepBy (many1 $ noneOf "|") pipe
+
+pipeSepIntItem :: Parser String
+pipeSepIntItem = do
+   whitespace
+   n <- many1 digit
+   void $ many $ oneOf " |"
+   return n
+
+pipeSepFloatItem :: Parser String
+pipeSepFloatItem = do
+   whitespace
+   n <- many1 (digit <|> char '.')
+   -- fel; godkänner även 3...1415
+   void $ many $ oneOf " |"
+   return n
 
 -- ======= Syntax inom celler ==========
 
@@ -128,6 +150,8 @@ tableName = do
   char '['
   s <- many $ noneOf "]"
   char ']'
+  whitespace
+  eof
   return s
 
 demo = do
