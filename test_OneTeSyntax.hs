@@ -34,6 +34,8 @@ pipeListTests = TestList [
     , pipeSepIntItemTestWithSingleNumber
     , pipeSepIntItemTestWithPipe
     , pipeSepFloatItemTestWithSingleNumber
+    , pipeSepFloatFailOnMultiPoint1
+    , pipeSepFloatFailOnMultiPoint2
      ]
 
 
@@ -84,6 +86,12 @@ pipeSepIntItemTestWithPipe =
 
 pipeSepFloatItemTestWithSingleNumber =
     parseWithLeftOver pipeSepFloatItem   " 1.23  | 34 " ~?= Right ("1.23", " 34 ")
+
+pipeSepFloatFailOnMultiPoint1 = 
+  isLeft (parse pipeSepFloatItem  "pipeSepFloatFailOnMultiPoint1" "1..23") ~?= True
+
+pipeSepFloatFailOnMultiPoint2 = 
+  isLeft (parse pipeSepFloatItem  "pipeSepFloatFailOnMultiPoint2" "1.23.45") ~?= True
 
 
 --------------------------------------------------------------------

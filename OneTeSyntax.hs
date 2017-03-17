@@ -119,12 +119,17 @@ pipeSepIntItem = do
 pipeSepFloatItem :: Parser String
 pipeSepFloatItem = do
    whitespace
-   n <- many1 (digit <|> char '.')
+   n1 <- many1 (digit) 
+   n2 <- try decimalPart
    void $ many $ char ' '
-   -- fel; godkänner även 3...1415
    void (char '|') <|> eof
-   return n
+   return  (n1++n2)
 
+decimalPart :: Parser String
+decimalPart = do
+  c <- char '.'
+  ds <- many1 digit
+  return (c:ds)
 
 -- ======= Syntax inom celler ==========
 
