@@ -1,9 +1,9 @@
-.hpc
-test_Excel
-test_Csv
+*.hi
+*.html
+*.o
 *.tic
 *.tix
-*.hi
-*.o
-*.html
-.html
+.hpc
+test_Csv
+test_Excel
+test_OneTeSyntax
