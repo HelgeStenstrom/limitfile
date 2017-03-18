@@ -143,6 +143,7 @@ caseInsStringTests = TestList [
  , caseInsString3
  , caseInsString4
  , caseInsStringFail
+ , caseInsStringFail1
    ]
 
 
@@ -157,8 +158,8 @@ caseInsString4 =
 caseInsStringFail =
   isLeft (parseWithLeftOver (caseInsensitiveString "A")  "No match" ) ~?= True
 
--- caseInsStringFail1 =
---   parseWithLeftOver (caseInsensitiveString "A")  "No match"  ~?= Left (ParseError )
+caseInsStringFail1 =
+ (fmap show $ fmap errorPos $  swapLR $ parseWithLeftOver (caseInsensitiveString "A")  "No match")  ~?= (Right "(line 1, column 1)")
 
 
 
@@ -168,4 +169,15 @@ caseInsStringFail =
 isLeft :: (Either l r) -> Bool
 isLeft (Left _) = True
 isLeft (Right _) = False
+
+-- errorPosOf :: Either ParseError b -> Either Text.Parsec.Pos.SourcePos b
+errorPosOf (Left l) = Left (errorPos l)
+errorPosOf (Right r)   = Right r
+
+errorMessOf (Left l) = Left (errorMessages l)
+errorMessOf (Right r)   = Right r
+
+swapLR :: (Either l r) -> Either r l
+swapLR (Left l) = Right l
+swapLR (Right r) = Left r
 
