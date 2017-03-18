@@ -5,8 +5,6 @@ where
 
 
 import Data.Char (toLower, toUpper)
--- import Data.Text (dropWhileEnd, dropWhile)
--- import Text.Parsec.Token
 import Control.Monad (void)
 import Data.Functor.Identity (Identity)
 import Debug.Trace (trace)
@@ -15,8 +13,6 @@ import Text.Parsec.Char (anyChar, string, digit)
 import Text.Parsec.Combinator (manyTill)
 import Text.Parsec.Prim (ParsecT, getParserState, parse, stateInput, try, (<|>), (<?>) )
 import Text.Parsec.String (Parser)
--- import Text.Parsec.Error -- .ParseError
--- import Text.Parsec.Pos 
 import qualified Test.HUnit as H
 
 import FunctionsAndTypesForParsing
@@ -25,16 +21,6 @@ import HelpFunctions
 
 trim :: String -> String
 trim = (dropWhile (\c -> c== ' ')) . reverse .  (dropWhile (\c -> c== ' ')) . reverse
-
-lexeme :: Parser a -> Parser a
-lexeme p = do
-           x <- p
-           whitespace
-           return x
-
--- blanks :: Parser ()
--- blanks = void $ many $ char ' '
-
 
 
 -- ======= Datatyper inom limitfiler ====
@@ -54,7 +40,7 @@ carrierStandard = do
    <|> (char '*' >> pure Any)
 
 
-data CarrierBW = Bandwidths [Int] | AnyBW deriving (Show, Eq, Read)
+data CarrierBW = Bandwidths [Int] | AnyBW deriving (Eq, Show ) --, Read)
 
 carrierBW :: Parser CarrierBW
 carrierBW = do
@@ -90,12 +76,6 @@ pipeSepNumList :: Parser [Int]
 pipeSepNumList = do
                ns <- many1 pipeSepIntItem
                return $ map read ns
-
-pipe :: Parser Char
-pipe = lexeme $ char '|'
-
-pipeSep1 ::  Parser [String]
-pipeSep1 = sepBy (many1 $ noneOf "|") pipe
 
 pipeSepIntItem :: Parser String
 pipeSepIntItem = do

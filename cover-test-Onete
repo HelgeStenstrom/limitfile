@@ -3,6 +3,7 @@
 ghc -fhpc test_OneTeSyntax.hs --make
 rm *.tix
 ./test_OneTeSyntax
-hpc report test_OneTeSyntax --exclude=Main --exclude=FunctionsAndTypesForParsing --exclude=HelpFunctions
-hpc markup test_OneTeSyntax --exclude=Main --exclude=FunctionsAndTypesForParsing --exclude=HelpFunctions
+hpc report test_OneTeSyntax --exclude=FunctionsAndTypesForParsing --exclude=HelpFunctions
+#  --exclude=Main 
+hpc markup test_OneTeSyntax --exclude=FunctionsAndTypesForParsing --exclude=HelpFunctions
 

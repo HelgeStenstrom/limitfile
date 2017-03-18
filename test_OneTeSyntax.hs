@@ -12,7 +12,8 @@ tests = TestList [
    tableNameTests
    , pipeListTests
    , tokenTests
-   -- , topLevelTests
+   , topLevelTests
+   , caseInsStringTests
     ]
     
 
@@ -44,13 +45,14 @@ tokenTests = TestList [
    , eutraBecomesCarrierStandardSameCase
    , utraMixedCase
    , eutraMixedCase
+   , failingCarrierStandard
    , asteriskMeansAnyStandard
    , carrierBandwidthMHzIsListOfInt
    , carrierBandwidthMHzIsAnyBW
     ]
 
 topLevelTests = TestList [
-    parsingEmptyFileReturnsEmptyList
+    -- parsingEmptyFileReturnsEmptyList
     ]
 
 -- splitStringsByPipe = 
@@ -115,6 +117,9 @@ utraMixedCase =
 eutraMixedCase =
    parse carrierStandard "" "EuTrA"  ~?= Right Eutra
 
+failingCarrierStandard =
+   isLeft (parse carrierStandard "" "xxx" ) ~?= True
+
 asteriskMeansAnyStandard =
   parse carrierStandard "asteriskMeansAnyStandard" "*"  ~?= Right Any
 
@@ -130,13 +135,30 @@ carrierBandwidthMHzIsAnyBW =
 parsingEmptyFileReturnsEmptyList =
    1 ~?= 2
 
--- willFail_1 =
    
 
+caseInsStringTests = TestList [
+   caseInsString1
+ , caseInsString2
+ , caseInsString3
+ , caseInsString4
+ , caseInsStringFail
+   ]
 
 
+caseInsString1 =
+   parseWithLeftOver  (caseInsensitiveString "a")  "aTheRest" ~?= Right ("a", "TheRest")
+caseInsString2 =
+   parseWithLeftOver  (caseInsensitiveString "a")  "ATheRest" ~?= Right ("A", "TheRest")
+caseInsString3 =
+   parseWithLeftOver  (caseInsensitiveString "A")  "aTheRest" ~?= Right ("a", "TheRest")
+caseInsString4 =
+   parseWithLeftOver  (caseInsensitiveString "A")  "ATheRest" ~?= Right ("A", "TheRest")
+caseInsStringFail =
+  isLeft (parseWithLeftOver (caseInsensitiveString "A")  "No match" ) ~?= True
 
-
+-- caseInsStringFail1 =
+--   parseWithLeftOver (caseInsensitiveString "A")  "No match"  ~?= Left (ParseError )
 
 
 
