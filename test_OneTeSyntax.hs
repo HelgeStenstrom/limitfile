@@ -143,7 +143,7 @@ caseInsStringTests = TestList [
  , caseInsString3
  , caseInsString4
  , caseInsStringFail
- , caseInsStringFail1
+ , caseInsStringFailPos
    ]
 
 
@@ -158,9 +158,11 @@ caseInsString4 =
 caseInsStringFail =
   isLeft (parseWithLeftOver (caseInsensitiveString "A")  "No match" ) ~?= True
 
-caseInsStringFail1 =
+caseInsStringFailPos =
  (fmap show $ fmap errorPos $  swapLR $ parseWithLeftOver (caseInsensitiveString "A")  "No match")  ~?= (Right "(line 1, column 1)")
 
+caseInsStringFailMess =
+ fmap (map messageString) $ fmap errorMessages $  swapLR $ parseWithLeftOver (caseInsensitiveString "A")  "No match"
 
 
 
